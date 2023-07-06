@@ -1,6 +1,7 @@
 package com.carles.compose.domain
 
 import com.carles.compose.AppDispatchers
+import com.carles.compose.MainDispatcherRule
 import com.carles.compose.data.HyruleRepository
 import com.carles.compose.model.MonsterDetail
 import com.carles.hyrule.domain.GetMonsterDetail
@@ -8,17 +9,18 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class GetMonsterDetailTest {
 
-    private val dispatcher = UnconfinedTestDispatcher()
-    private val dispatchers = AppDispatchers(dispatcher, dispatcher, dispatcher)
+    @get:Rule
+    var mainDispatcherRule = MainDispatcherRule()
+
+    private val dispatchers = AppDispatchers(Dispatchers.Main, Dispatchers.Main, Dispatchers.Main)
     private val repository: HyruleRepository = mockk()
     private lateinit var usecase: GetMonsterDetail
 
