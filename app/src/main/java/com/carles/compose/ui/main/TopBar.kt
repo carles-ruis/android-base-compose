@@ -37,7 +37,9 @@ fun TopBar(
         title = {
             AnimatedContent(
                 targetState = title,
-                transitionSpec = { fadeIn(tween()) with fadeOut(tween()) }) { target ->
+                transitionSpec = { fadeIn(tween()) with fadeOut(tween()) },
+                label = "AnimatedContent:TopBar"
+            ) { target ->
                 Text(
                     text = target,
                     style = MaterialTheme.typography.headlineMedium.merge(

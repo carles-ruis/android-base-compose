@@ -1,8 +1,9 @@
-package com.carles.compose
+package com.carles.compose.di
 
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.carles.compose.AppDispatchers
 import com.carles.compose.data.local.HyruleDatabase
 import com.carles.compose.data.local.MonsterDao
 import com.carles.compose.data.remote.HyruleApi

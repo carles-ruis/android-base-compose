@@ -55,9 +55,9 @@ class MainActivityTest {
             activityRule.scenario.onActivity { action ->
                 action.onBackPressedDispatcher.onBackPressed()
             }
-            val isDestroyed = activityRule.scenario.state == Lifecycle.State.RESUMED
+            val isResumed = activityRule.scenario.state == Lifecycle.State.RESUMED
             val isCreated = activityRule.scenario.state == Lifecycle.State.CREATED
-            Assert.assertTrue(isDestroyed || isCreated)
+            Assert.assertTrue(isResumed || isCreated)
         }
     }
 }
