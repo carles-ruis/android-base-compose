@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.carles.compose.model.MonsterDetail
 import com.carles.compose.ui.navigation.Screen
-import com.carles.hyrule.domain.GetMonsterDetail
+import com.carles.compose.domain.GetMonsterDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

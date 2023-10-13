@@ -36,5 +36,3 @@ class Cache @Inject constructor(private val datastore: AppDatastore) {
 
     private fun now() = Calendar.getInstance().timeInMillis
 }
-
-object ItemNotCachedException : RuntimeException()

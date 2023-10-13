@@ -5,9 +5,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.carles.compose.R
-import com.carles.settings.SettingsUi
-import com.carles.settings.domain.ObserveUserSettings
-import com.carles.settings.domain.SetCacheExpirationTime
+import com.carles.compose.model.SettingsUi
+import com.carles.compose.domain.ObserveUserSettings
+import com.carles.compose.domain.SetCacheExpirationTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,12 +40,12 @@ class SettingsViewModel @Inject constructor(
 
     private fun observeUserSettings() {
         observeUserSettings.execute()
-            .onEach { settings ->
-                _uiState.update { it.copy(settings = settingsMapper.toUi(settings), error = null) }
-            }
             .catch { error ->
                 Log.w("SettingsViewModel", error)
                 _uiState.update { it.copy(error = error.message) }
+            }
+            .onEach { settings ->
+                _uiState.update { it.copy(settings = settingsMapper.toUi(settings), error = null) }
             }
             .launchIn(viewModelScope)
     }

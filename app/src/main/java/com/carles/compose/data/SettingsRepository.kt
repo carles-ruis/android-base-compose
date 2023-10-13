@@ -2,7 +2,7 @@ package com.carles.compose.data
 
 import com.carles.compose.data.cache.AppDatastore
 import com.carles.compose.data.cache.Cache
-import com.carles.settings.UserSettings
+import com.carles.compose.model.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -1,8 +1,8 @@
-package com.carles.settings.domain
+package com.carles.compose.domain
 
 import com.carles.compose.AppDispatchers
 import com.carles.compose.data.SettingsRepository
-import com.carles.settings.UserSettings
+import com.carles.compose.model.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject

@@ -1,9 +1,8 @@
-package com.carles.settings.ui
+package com.carles.compose.ui.settings
 
 import com.carles.compose.R
-import com.carles.compose.ui.settings.SettingsMapper
-import com.carles.settings.Setting
-import com.carles.settings.UserSettings
+import com.carles.compose.model.Setting
+import com.carles.compose.model.UserSettings
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

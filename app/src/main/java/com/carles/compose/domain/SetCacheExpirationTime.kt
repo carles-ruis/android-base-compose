@@ -1,4 +1,4 @@
-package com.carles.settings.domain
+package com.carles.compose.domain
 
 import com.carles.compose.AppDispatchers
 import com.carles.compose.data.SettingsRepository
@@ -10,9 +10,7 @@ class SetCacheExpirationTime @Inject constructor(
     private val dispatchers: AppDispatchers
 ) {
 
-    suspend fun execute(expirationTime: Int) {
-        return withContext(dispatchers.io) {
-            repository.setCacheExpirationTime(expirationTime)
-        }
+    suspend fun execute(expirationTime: Int) = withContext(dispatchers.io) {
+        repository.setCacheExpirationTime(expirationTime)
     }
 }

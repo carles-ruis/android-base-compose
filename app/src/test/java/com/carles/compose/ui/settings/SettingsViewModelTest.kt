@@ -1,14 +1,14 @@
-package com.carles.settings.ui
+package com.carles.compose.ui.settings
 
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.R
 import com.carles.compose.ui.settings.SettingsMapper
 import com.carles.compose.ui.settings.SettingsUiState
 import com.carles.compose.ui.settings.SettingsViewModel
-import com.carles.settings.SettingsUi
-import com.carles.settings.UserSettings
-import com.carles.settings.domain.ObserveUserSettings
-import com.carles.settings.domain.SetCacheExpirationTime
+import com.carles.compose.model.SettingsUi
+import com.carles.compose.model.UserSettings
+import com.carles.compose.domain.ObserveUserSettings
+import com.carles.compose.domain.SetCacheExpirationTime
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

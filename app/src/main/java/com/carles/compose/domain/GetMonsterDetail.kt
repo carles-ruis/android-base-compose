@@ -1,4 +1,4 @@
-package com.carles.hyrule.domain
+package com.carles.compose.domain
 
 import com.carles.compose.AppDispatchers
 import com.carles.compose.data.HyruleRepository

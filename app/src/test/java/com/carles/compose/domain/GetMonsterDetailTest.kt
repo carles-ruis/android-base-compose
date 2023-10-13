@@ -4,7 +4,6 @@ import com.carles.compose.AppDispatchers
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.data.HyruleRepository
 import com.carles.compose.model.MonsterDetail
-import com.carles.hyrule.domain.GetMonsterDetail
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

@@ -1,8 +1,9 @@
-package com.carles.settings.domain
+package com.carles.compose.domain
 
 import com.carles.compose.AppDispatchers
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.data.SettingsRepository
+import com.carles.compose.domain.SetCacheExpirationTime
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

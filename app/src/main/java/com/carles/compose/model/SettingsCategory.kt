@@ -1,4 +1,4 @@
-package com.carles.settings
+package com.carles.compose.model
 
 import androidx.annotation.StringRes
 

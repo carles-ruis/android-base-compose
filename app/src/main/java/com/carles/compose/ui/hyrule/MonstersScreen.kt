@@ -16,14 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.carles.compose.R
+import com.carles.compose.data.remote.MonstersResponseDto
 import com.carles.compose.model.Monster
-import com.carles.compose.ui.common.CenteredProgressIndicator
-import com.carles.compose.ui.common.debounceClickable
-import com.carles.compose.ui.common.disableSplitMotionEvents
-import com.carles.hyrule.ui.ErrorDialog
+import com.carles.compose.model.mapper.MonstersMapper
+import com.carles.compose.ui.composables.CenteredProgressIndicator
+import com.carles.compose.ui.extensions.debounceClickable
+import com.carles.compose.ui.extensions.disableSplitMotionEvents
+import com.carles.compose.ui.theme.HyruleTheme
+import com.google.gson.Gson
 
 @Composable
 fun MonstersScreen(viewModel: MonstersViewModel, onMonsterClick: (Int) -> Unit) {
@@ -32,16 +36,16 @@ fun MonstersScreen(viewModel: MonstersViewModel, onMonsterClick: (Int) -> Unit) 
 }
 
 @Composable
-fun MonstersScreen(state: MonstersUiState, onMonsterClick: (Int) -> Unit, retry: () -> Unit) {
+fun MonstersScreen(state: MonstersUiState, onMonsterClick: (Int) -> Unit, onRetryClick: () -> Unit) {
     when (state) {
         is MonstersUiState.Loading -> CenteredProgressIndicator()
-        is MonstersUiState.Error -> ErrorDialog(state.message, retry)
-        is MonstersUiState.Data -> MonstersList(state.monsters, onMonsterClick)
+        is MonstersUiState.Error -> ErrorDialog(message = state.message, onRetryClick = onRetryClick)
+        is MonstersUiState.Data -> MonstersList(monsters = state.monsters, onMonsterClick = onMonsterClick)
     }
 }
 
 @Composable
-private fun MonstersList(monsters: List<Monster>, onMonsterClick: (Int) -> Unit, modifier: Modifier = Modifier) {
+private fun MonstersList(monsters: List<Monster>, modifier: Modifier = Modifier, onMonsterClick: (Int) -> Unit = {}) {
     val state = rememberLazyListState()
 
     LazyColumn(
@@ -83,3 +87,26 @@ private fun MonstersRow(monster: Monster, showDivider: Boolean, onMonsterClick: 
         )
     }
 }
+
+@Preview
+@Composable
+private fun MonstersListPreview() {
+    val mapper = MonstersMapper()
+    val monsters = mapper.toEntity(Gson().fromJson(MONSTERS_RESPONSE, MonstersResponseDto::class.java)).let { entities ->
+        mapper.fromEntity(entities)
+    }
+    HyruleTheme {
+        MonstersList(monsters)
+    }
+}
+
+private const val MONSTERS_RESPONSE = """
+    {
+  "data": [
+    { "id": 120, "name": "silver lizalfos" },
+    { "id": 121, "name": "guardian scout iv" },
+    { "id": 122, "name": "ice-breath lizalfos" },
+    { "id": 123, "name": "stone talus (rare)" },
+    { "id": 124, "name": "lizalfos" } 
+    ] }
+    """

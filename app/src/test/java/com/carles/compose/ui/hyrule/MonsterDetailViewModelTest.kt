@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.model.MonsterDetail
 import com.carles.compose.ui.navigation.Screen
-import com.carles.hyrule.domain.GetMonsterDetail
+import com.carles.compose.domain.GetMonsterDetail
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

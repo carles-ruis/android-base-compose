@@ -2,7 +2,7 @@ package com.carles.compose.ui.hyrule
 
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.model.Monster
-import com.carles.hyrule.domain.RefreshMonsters
+import com.carles.compose.domain.RefreshMonsters
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

@@ -2,10 +2,10 @@ package com.carles.compose.ui.settings
 
 import androidx.annotation.StringRes
 import com.carles.compose.R
-import com.carles.settings.Setting
-import com.carles.settings.SettingsCategory
-import com.carles.settings.SettingsUi
-import com.carles.settings.UserSettings
+import com.carles.compose.model.Setting
+import com.carles.compose.model.SettingsCategory
+import com.carles.compose.model.SettingsUi
+import com.carles.compose.model.UserSettings
 import javax.inject.Inject
 
 class SettingsMapper @Inject constructor() {

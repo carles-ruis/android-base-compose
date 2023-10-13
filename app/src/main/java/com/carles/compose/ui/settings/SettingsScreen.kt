@@ -1,6 +1,5 @@
 package com.carles.compose.ui.settings
 
-import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -14,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -32,23 +30,28 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.carles.compose.R
-import com.carles.settings.Setting
-import com.carles.settings.SettingsCategory
-import com.carles.settings.SettingsUi
+import com.carles.compose.model.Setting
+import com.carles.compose.model.SettingsCategory
+import com.carles.compose.model.SettingsUi
+import com.carles.compose.model.UserSettings
+import com.carles.compose.ui.theme.HyruleTheme
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel) {
     val uiState: SettingsUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    SettingsScreen(uiState) { key, selectedOption -> viewModel.onSettingSelected(key, selectedOption) }
+    SettingsScreen(
+        uiState = uiState,
+        onSelected = { key, selectedOption -> viewModel.onSettingSelected(key, selectedOption) })
 }
 
 @Composable
-fun SettingsScreen(uiState: SettingsUiState, context: Context = LocalContext.current, onSelected: (Int, Int) -> Unit) {
+fun SettingsScreen(uiState: SettingsUiState, onSelected: (Int, Int) -> Unit = { _, _ -> }) {
     uiState.error?.let {
-        Toast.makeText(context, uiState.error, Toast.LENGTH_LONG).show()
+        Toast.makeText(LocalContext.current, uiState.error, Toast.LENGTH_LONG).show()
     }
     uiState.settings?.let {
         SettingsContent(it, onSelected)
@@ -64,13 +67,13 @@ fun SettingsContent(settings: SettingsUi, onSelected: (Int, Int) -> Unit, modifi
             .verticalScroll(rememberScrollState())
     ) {
         settings.forEach { category ->
-            SettingsCategory(category) { key, selectedOption -> onSelected(key, selectedOption) }
+            SettingsCategory(category, onSelected)
         }
     }
 }
 
 @Composable
-fun SettingsCategory(category: SettingsCategory, modifier: Modifier = Modifier, onSelected: (Int, Int) -> Unit) {
+private fun SettingsCategory(category: SettingsCategory, onSelected: (Int, Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = stringResource(category.title),
@@ -83,15 +86,14 @@ fun SettingsCategory(category: SettingsCategory, modifier: Modifier = Modifier, 
         )
         category.settings.forEach { setting ->
             when (setting) {
-                is Setting.ListSetting -> SettingList(setting) { key, selectedOption -> onSelected(key, selectedOption) }
-                else -> {}
+                is Setting.ListSetting -> SettingList(setting, onSelected)
             }
         }
     }
 }
 
 @Composable
-fun SettingList(setting: Setting.ListSetting, modifier: Modifier = Modifier, onSelected: (Int, Int) -> Unit) {
+private fun SettingList(setting: Setting.ListSetting, onSelected: (Int, Int) -> Unit, modifier: Modifier = Modifier) {
     var showDialog by remember { mutableStateOf(false) }
 
     Column(modifier
@@ -113,17 +115,18 @@ fun SettingList(setting: Setting.ListSetting, modifier: Modifier = Modifier, onS
     if (showDialog) {
         ListSettingDialog(
             setting = setting,
-            onDismiss = { showDialog = false }
-        ) { key, selectedOption -> onSelected(key, selectedOption) }
+            onDismiss = { showDialog = false },
+            onSelected = onSelected
+        )
     }
 }
 
 @Composable
-fun ListSettingDialog(
+private fun ListSettingDialog(
     setting: Setting.ListSetting,
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    onSelected: (Int, Int) -> Unit
+    onDismiss: () -> Unit = {},
+    onSelected: (Int, Int) -> Unit = { _, _ -> }
 ) {
     AlertDialog(
         modifier = modifier.testTag(stringResource(R.string.tag_settings_dialog)),
@@ -141,21 +144,24 @@ fun ListSettingDialog(
         text = {
             Column(Modifier.selectableGroup()) {
                 setting.options.forEach { option ->
-                    ListSettingDialogRow(setting.value, option) {
-                        onSelected(setting.key, option)
-                        onDismiss()
-                    }
+                    ListSettingDialogRow(
+                        currentSelection = setting.value,
+                        option = option,
+                        onSelected = {
+                            onSelected(setting.key, option)
+                            onDismiss()
+                        })
                 }
             }
         })
 }
 
 @Composable
-fun ListSettingDialogRow(
+private fun ListSettingDialogRow(
     currentSelection: Int,
     @StringRes option: Int,
+    onSelected: () -> Unit,
     modifier: Modifier = Modifier,
-    onSelected: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -176,6 +182,35 @@ fun ListSettingDialogRow(
             text = stringResource(id = option),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(start = 16.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SettingsScreen_CacheExpirationTenMinutes() {
+    val settings = SettingsMapper().toUi(UserSettings(cacheExpirationTime = 10))
+    HyruleTheme {
+        SettingsScreen(SettingsUiState(settings = settings))
+    }
+}
+
+@Preview
+@Composable
+private fun ListSettingDialog_SelectCacheExpiration() {
+    HyruleTheme {
+        ListSettingDialog(
+            Setting.ListSetting(
+                key = R.string.preferences_cache_key,
+                title = R.string.preferences_cache_expiration,
+                value = R.string.preferences_cache_dont_use,
+                options = listOf(
+                    R.string.preferences_cache_dont_use,
+                    R.string.preferences_cache_one_minute,
+                    R.string.preferences_cache_ten_minutes,
+                    R.string.preferences_cache_never
+                )
+            )
         )
     }
 }

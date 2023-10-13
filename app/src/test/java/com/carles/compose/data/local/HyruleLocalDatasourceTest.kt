@@ -3,7 +3,6 @@ package com.carles.compose.data.local
 import com.carles.compose.data.cache.Cache
 import com.carles.compose.data.cache.CacheItems
 import com.carles.compose.data.cache.CacheKey
-import com.carles.compose.data.cache.ItemNotCachedException
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

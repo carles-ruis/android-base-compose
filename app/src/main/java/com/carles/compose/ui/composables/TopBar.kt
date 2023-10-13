@@ -1,4 +1,4 @@
-package com.carles.compose.ui.main
+package com.carles.compose.ui.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -18,11 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import com.carles.compose.R
 import com.carles.compose.ui.navigation.Destination
 import com.carles.compose.ui.navigation.DestinationItem
+import com.carles.compose.ui.navigation.Screen
+import com.carles.compose.ui.theme.HyruleTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -31,7 +32,7 @@ fun TopBar(
     showBackButton: Boolean,
     menuItems: List<DestinationItem>,
     modifier: Modifier = Modifier,
-    navigateTo: (Destination) -> Unit,
+    navigateTo: (Destination) -> Unit = {},
 ) {
     TopAppBar(
         title = {
@@ -42,9 +43,8 @@ fun TopBar(
             ) { target ->
                 Text(
                     text = target,
-                    style = MaterialTheme.typography.headlineMedium.merge(
-                        TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false))
-                    ),
+                    style = MaterialTheme.typography.headlineMedium
+                    /*.merge(TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)))*/,
                     modifier = Modifier.testTag(stringResource(R.string.tag_top_bar_title))
                 )
             }
@@ -67,4 +67,28 @@ fun TopBar(
         },
         modifier = modifier.testTag(stringResource(R.string.tag_top_bar))
     )
+}
+
+@Preview
+@Composable
+private fun TopBar_SettingsScreen() {
+    HyruleTheme {
+        TopBar(
+            title = stringResource(id = R.string.settings),
+            showBackButton = true,
+            menuItems = Screen.Settings.menuItems
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun TopBar_MonstersScreen() {
+    HyruleTheme {
+        TopBar(
+            title = stringResource(id = R.string.appname),
+            showBackButton = false,
+            menuItems = emptyList()
+        )
+    }
 }

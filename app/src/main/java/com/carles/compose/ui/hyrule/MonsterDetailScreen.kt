@@ -1,4 +1,4 @@
-package com.carles.hyrule.ui
+package com.carles.compose.ui.hyrule
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImagePainter
@@ -25,9 +26,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.carles.compose.R
 import com.carles.compose.model.MonsterDetail
-import com.carles.compose.ui.common.CenteredProgressIndicator
-import com.carles.compose.ui.hyrule.MonsterDetailUiState
-import com.carles.compose.ui.hyrule.MonsterDetailViewModel
+import com.carles.compose.ui.composables.CenteredProgressIndicator
+import com.carles.compose.ui.theme.HyruleTheme
 
 @Composable
 fun MonsterDetailScreen(viewModel: MonsterDetailViewModel, changeTitle: (String) -> Unit, navigateUp: () -> Unit) {
@@ -36,10 +36,15 @@ fun MonsterDetailScreen(viewModel: MonsterDetailViewModel, changeTitle: (String)
 }
 
 @Composable
-fun MonsterDetailScreen(uiState: MonsterDetailUiState, changeTitle: (String) -> Unit, navigateUp: () -> Unit, retry: () -> Unit) {
+private fun MonsterDetailScreen(
+    uiState: MonsterDetailUiState,
+    changeTitle: (String) -> Unit,
+    navigateUp: () -> Unit,
+    retry: () -> Unit
+) {
     when {
         uiState.loading -> CenteredProgressIndicator()
-        uiState.error != null -> ErrorDialog(uiState.error, retry, navigateUp)
+        uiState.error != null -> ErrorDialog(Modifier, uiState.error, retry, navigateUp)
         else -> uiState.monster?.let {
             changeTitle(it.name)
             MonsterDetailContent(it)
@@ -115,5 +120,22 @@ private fun MonsterDetailImage(image: String, modifier: Modifier = Modifier) {
                 CenteredProgressIndicator()
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun MonsterDetailPreview() {
+    HyruleTheme {
+        MonsterDetailContent(
+            MonsterDetail(
+                id = 120,
+                name = "guardian scout iv",
+                commonLocations = "Gerudo Highlands, Hebra Mountains",
+                description = "These quick-witted, lizard-like monsters can be found all over Hyrule. The balls of ice they spit " +
+                        "make them particularly troublesome, but exposure to fire will kill them instantly. Their homes are mainly on snowy mountains.",
+                image = ""
+            )
+        )
     }
 }

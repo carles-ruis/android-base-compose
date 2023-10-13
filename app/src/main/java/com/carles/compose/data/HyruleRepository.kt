@@ -1,6 +1,6 @@
 package com.carles.compose.data
 
-import com.carles.compose.data.cache.ItemNotCachedException
+import com.carles.compose.data.local.ItemNotCachedException
 import com.carles.compose.data.local.HyruleLocalDatasource
 import com.carles.compose.data.remote.HyruleRemoteDatasource
 import com.carles.compose.model.Monster

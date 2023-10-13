@@ -1,18 +1,24 @@
-package com.carles.compose.ui.main
+package com.carles.compose.ui.composables
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import com.carles.compose.ui.hyrule.MonstersScreen
 import com.carles.compose.ui.navigation.Destination
 import com.carles.compose.ui.navigation.Navigate
 import com.carles.compose.ui.navigation.Screen
-import com.carles.compose.ui.navigation.defaultComposable
-import com.carles.hyrule.ui.MonsterDetailScreen
 import com.carles.compose.ui.settings.SettingsScreen
+import com.carles.compose.ui.hyrule.MonsterDetailScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -53,3 +59,33 @@ private fun NavGraphBuilder.settingsDestination() {
         SettingsScreen(viewModel = hiltViewModel())
     }
 }
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun NavGraphBuilder.defaultComposable(
+    route: String,
+    arguments: List<NamedNavArgument> = emptyList(),
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
+) {
+    composable(
+        route = route,
+        arguments = arguments,
+        enterTransition = { slideInFromRightToLeft() },
+        exitTransition = { slideOutFromRightToLeft() },
+        popEnterTransition = { slideInFromLeftToRight() },
+        popExitTransition = { slideOutFromLeftToRight() }
+    ) { backStackEntry ->
+        content(backStackEntry)
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun AnimatedContentScope<NavBackStackEntry>.slideInFromRightToLeft() = slideInHorizontally(initialOffsetX = { it })
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun AnimatedContentScope<NavBackStackEntry>.slideOutFromRightToLeft() = slideOutHorizontally(targetOffsetX = { -it })
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun AnimatedContentScope<NavBackStackEntry>.slideInFromLeftToRight() = slideInHorizontally(initialOffsetX = { -it })
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun AnimatedContentScope<NavBackStackEntry>.slideOutFromLeftToRight() = slideOutHorizontally(targetOffsetX = { it })
