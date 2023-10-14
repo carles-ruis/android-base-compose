@@ -20,9 +20,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.carles.compose.R
-import com.carles.compose.ui.navigation.Destination
-import com.carles.compose.ui.navigation.DestinationItem
-import com.carles.compose.ui.navigation.Screen
+import com.carles.compose.ui.NavigationItem
+import com.carles.compose.ui.Screen
 import com.carles.compose.ui.theme.HyruleTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
@@ -30,9 +29,10 @@ import com.carles.compose.ui.theme.HyruleTheme
 fun TopBar(
     title: String,
     showBackButton: Boolean,
-    menuItems: List<DestinationItem>,
+    navigationItems: List<NavigationItem>,
     modifier: Modifier = Modifier,
-    navigateTo: (Destination) -> Unit = {},
+    navigateUp: () -> Unit = {},
+    navigateTo: (Screen, Array<String>) -> Unit = { _, _ -> },
 ) {
     TopAppBar(
         title = {
@@ -43,25 +43,23 @@ fun TopBar(
             ) { target ->
                 Text(
                     text = target,
-                    style = MaterialTheme.typography.headlineMedium
-                    /*.merge(TextStyle(platformStyle = PlatformTextStyle(includeFontPadding = false)))*/,
+                    style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.testTag(stringResource(R.string.tag_top_bar_title))
                 )
             }
         },
         navigationIcon = {
             if (showBackButton) {
-                IconButton(
-                    onClick = { navigateTo(Destination.Back) }) {
+                IconButton(onClick = navigateUp) {
                     Icon(Icons.Filled.ArrowBack, stringResource(R.string.description_back_arrow))
                 }
             }
         },
         actions = {
-            menuItems.forEach { menuItem ->
+            navigationItems.forEach { item ->
                 IconButton(
-                    onClick = { navigateTo(menuItem.destination) }) {
-                    Icon(menuItem.icon, stringResource(menuItem.description))
+                    onClick = { navigateTo(item.screen, item.arguments) }) {
+                    Icon(item.icon, stringResource(item.description))
                 }
             }
         },
@@ -76,7 +74,7 @@ private fun TopBar_SettingsScreen() {
         TopBar(
             title = stringResource(id = R.string.settings),
             showBackButton = true,
-            menuItems = Screen.Settings.menuItems
+            navigationItems = Screen.Settings.navigationItems
         )
     }
 }
@@ -88,7 +86,7 @@ private fun TopBar_MonstersScreen() {
         TopBar(
             title = stringResource(id = R.string.appname),
             showBackButton = false,
-            menuItems = emptyList()
+            navigationItems = emptyList()
         )
     }
 }

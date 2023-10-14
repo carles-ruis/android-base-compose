@@ -3,7 +3,7 @@ package com.carles.compose.ui.hyrule
 import androidx.lifecycle.SavedStateHandle
 import com.carles.compose.MainDispatcherRule
 import com.carles.compose.model.MonsterDetail
-import com.carles.compose.ui.navigation.Screen
+import com.carles.compose.ui.Screen
 import com.carles.compose.domain.GetMonsterDetail
 import io.mockk.coEvery
 import io.mockk.coVerify
